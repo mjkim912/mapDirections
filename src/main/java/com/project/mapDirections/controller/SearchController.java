@@ -42,14 +42,11 @@ public class SearchController {
         String option = "trafast";
         
         System.out.println("param : " + param);
-        System.out.println("start : " + param.get("start_x"));
         
-        String start = String.join(",", param.get("start_x").toString(), param.get("start_y").toString());
-        String goal = String.join(",", param.get("goal_x").toString(), param.get("goal_y").toString());
-        String way = String.join(",", param.get("way_x").toString(), param.get("way_y").toString());
+        String start = param.get("start").toString();
+        String goal = param.get("goal").toString();
+        String wayPoints = param.get("wayPoints").toString();
         
-        System.out.println("way : " + way);
-
         HttpClient httpClient = HttpClient.create().secure(t -> {
         
             try {
@@ -77,7 +74,7 @@ public class SearchController {
 
         String response = "";
         
-        if (way.equals("0,0")) {
+        if (wayPoints.equals("")) {
         	response = client.get().uri(uriBuilder -> uriBuilder.path("")
                 .queryParam("start", start)
                 .queryParam("goal", goal)
@@ -92,7 +89,7 @@ public class SearchController {
         	response = client.get().uri(uriBuilder -> uriBuilder.path("")
                     .queryParam("start", start)
                     .queryParam("goal", goal)
-                    .queryParam("waypoints", way)
+                    .queryParam("waypoints", wayPoints)
                     .queryParam("option",option)
                     .build())
                     .header("X-NCP-APIGW-API-KEY-ID",clientId)
@@ -118,7 +115,7 @@ public class SearchController {
 			// it works
             //Map<String, String> map = mapper.readValue(json, new TypeReference<Map<String, String>>() {});
 
-            System.out.println(map.size());
+            System.out.println(map.get("message"));
             
             for (Map.Entry<String, Object> entry : map.entrySet()) {
             	//System.out.println(entry.getKey());
@@ -130,8 +127,6 @@ public class SearchController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        //System.out.println(" response : " + response);
         
 		return mp;
 	}

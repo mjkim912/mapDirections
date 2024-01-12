@@ -24,16 +24,46 @@
 <div id="map" style="width: 100%; height: 600px; position: relative; overflow: hidden; background: rgb(248, 249, 250);">
 	<div class="search">
 		<div>
-			<input id="startAddr" type="text" placeholder="검색할 주소" value="불정로 6">
-			<input id="startSubmit" type="button" value="출발 주소 검색">
+			<input id="startAddr" type="text" placeholder="출발지" value="불정로 6">
+			<!-- <input id="startSubmit" type="button" value="출발 주소 검색"> -->
+			<button type="button" id="startSubmit" class="btn btn-success btn-sm">출발 주소 검색</button>
 		</div>
 		<div>
-			<input id="wayAddr" type="text" placeholder="검색할 주소" value="">
-			<input id="waySubmit" type="button" value="경유 주소 검색">
+			<input id="wayAddr1" type="text" placeholder="경유지1" value="">
+			<!-- 
+			<input id="waySubmit1" type="button" value="경유 주소 검색">
+			 -->
+			 <button type="button" id="waySubmit1" class="btn btn-primary btn-sm">경유 주소 검색</button>
+			 <button type="button" id="waySubmit1Del" class="btn btn-danger btn-sm">삭제</button>
 		</div>
 		<div>
-			<input id="goalAddr" type="text" placeholder="검색할 주소" value="">
-			<input id="goalSubmit" type="button" value="도착 주소 검색">
+			<input id="wayAddr2" type="text" placeholder="경유지2" value="">
+			<!-- <input id="waySubmit2" type="button" value="경유 주소 검색"> -->
+			<button type="button" id="waySubmit2" class="btn btn-primary btn-sm">경유 주소 검색</button>
+			<button type="button" id="waySubmit2Del" class="btn btn-danger btn-sm">삭제</button>
+		</div>
+		<div>
+			<input id="wayAddr3" type="text" placeholder="경유지3" value="">
+			<!-- <input id="waySubmit3" type="button" value="경유 주소 검색"> -->
+			<button type="button" id="waySubmit3" class="btn btn-primary btn-sm">경유 주소 검색</button>
+			<button type="button" id="waySubmit3Del" class="btn btn-danger btn-sm">삭제</button>
+		</div>
+		<div>
+			<input id="wayAddr4" type="text" placeholder="경유지4" value="">
+			<!-- <input id="waySubmit4" type="button" value="경유 주소 검색"> -->
+			<button type="button" id="waySubmit4" class="btn btn-primary btn-sm">경유 주소 검색</button>
+			<button type="button" id="waySubmit4Del" class="btn btn-danger btn-sm">삭제</button>
+		</div>
+		<div>
+			<input id="wayAddr5" type="text" placeholder="경유지5" value="">
+			<!-- <input id="waySubmit5" type="button" value="경유 주소 검색"> -->
+			<button type="button" id="waySubmit5" class="btn btn-primary btn-sm">경유 주소 검색</button>
+			<button type="button" id="waySubmit5Del" class="btn btn-danger btn-sm">삭제</button>
+		</div>
+		<div>
+			<input id="goalAddr" type="text" placeholder="도착지" value="">
+			<!-- <input id="goalSubmit" type="button" value="도착 주소 검색"> -->
+			<button type="button" id="goalSubmit" class="btn btn-success btn-sm">도착 주소 검색</button>
 		</div>
 		<div>
 			<input class="btn btn-primary" id="findPathBtn" type="button" value="길찾기">
@@ -50,32 +80,54 @@
  
 <script th:inline="javascript" type="text/javascript">
 
-var startPosition = [];
-var goalPosition = [];
+var startPosition;
+var goalPosition;
 var wayPosition = [0, 0];
+var wayPoints = ['', '', '', '', '', ''];
 
 $(document).ready(function() {
+	
+	$('#waySubmit1Del').on('click', function(e) {
+		$('#wayAddr1').val("");
+		wayPoints[1] = '';
+	});
+	$('#waySubmit2Del').on('click', function(e) {
+		$('#wayAddr2').val("");
+		wayPoints[2] = '';
+	});
+	$('#waySubmit3Del').on('click', function(e) {
+		$('#wayAddr3').val("");
+		wayPoints[3] = '';
+	});
+	$('#waySubmit4Del').on('click', function(e) {
+		$('#wayAddr4').val("");
+		wayPoints[4] = '';
+	});
+	$('#waySubmit5Del').on('click', function(e) {
+		$('#wayAddr5').val("");
+		wayPoints[5] = '';
+	});
 	
 	 $('#findPathBtn').on('click', function(e) {
 		if ($('#startAddr').val().replace(" ", "") == '') {
 			alert("check start");
+			return;
 		}
 		
 		if ($('#goalAddr').val().replace(" ", "") == '') {
 			alert("check destination");
+			return;
 		}
 		
+		let wayPoint = wayPoints.filter(Boolean).join("|");
+		
 		let param = JSON.stringify({
-			"start_x": startPosition[0],
-			"start_y": startPosition[1],
-			"goal_x": goalPosition[0],
-			"goal_y": goalPosition[1],
-			"way_x": wayPosition[0],
-			"way_y": wayPosition[1]
+			"start": startPosition,
+			"goal": goalPosition,
+			"wayPoints": wayPoint
 		});
 		 
-		 
-		//console.log('positions : ', param);
+		console.log('param : ', param);
 	     
 	    $.ajax({
 	 		url: '/findPath',
@@ -98,13 +150,7 @@ $(document).ready(function() {
 });
 
 function makeRoute(path, distance, duration) {
-	var polyline = new naver.maps.Polyline({
-		map: map,
-		path: []
-	});
 	polyline.setMap(null);
-	polyline = null;
-	
 	
 	infoWindow.setContent([
         '<div style="padding:5px;min-width:200px;line-height:150%;">',
@@ -113,7 +159,8 @@ function makeRoute(path, distance, duration) {
         '</div>'
     ].join('\n'));
 
-	let infoPos = new naver.maps.Point(goalPosition[0], goalPosition[1]);
+	let goalPos = goalPosition.split(',');
+	let infoPos = new naver.maps.Point(goalPos[0], goalPos[1]);
 	
     map.setCenter(infoPos);
     infoWindow.open(map, infoPos);
@@ -130,6 +177,13 @@ var map = new naver.maps.Map("map", {
     center: new naver.maps.LatLng(37.3595316, 127.1052133),
     zoom: 15,
     mapTypeControl: true
+});
+
+var polyline = new naver.maps.Polyline({
+    //map: map,
+    //path: path,
+    //strokeColor: '#ff0000',
+    //strokeWeight: 4
 });
 
 var infoWindow = new naver.maps.InfoWindow({
@@ -176,7 +230,7 @@ function searchCoordinateToAddress(latlng) {
     });
 }
 
-function searchAddressToCoordinate(target, address) {
+function searchAddressToCoordinate(place, address) {
     naver.maps.Service.geocode({
         query: address
     }, function(status, response) {
@@ -214,16 +268,16 @@ function searchAddressToCoordinate(target, address) {
         map.setCenter(point);
         infoWindow.open(map, point);
         
+        let target = place.split('_');
         
-        if (target == 'start') {
-        	startPosition[0] = item.x;
-        	startPosition[1] = item.y;
-        } else if (target == 'goal') {
-        	goalPosition[0] = item.x;
-        	goalPosition[1] = item.y;
-        } else if (target == 'way') {
-        	wayPosition[0] = item.x;
-        	wayPosition[1] = item.y;
+        if (target[0] == 'start') {
+        	startPosition = item.x + ',' + item.y;
+        } else if (target[0] == 'goal') {
+        	goalPosition = item.x + ',' + item.y;
+        } else if (target[0] == 'way') {
+        	//wayPosition[0] = item.x;
+        	//wayPosition[1] = item.y;
+        	wayPoints[target[1]] = item.x + ',' + item.y;
         }
         
     });
@@ -262,18 +316,79 @@ function initGeocoder() {
         searchAddressToCoordinate('goal', $('#goalAddr').val());
     });
     
-    $('#wayAddr').on('keydown', function(e) {
+    // 경유지 1
+    $('#wayAddr1').on('keydown', function(e) {
         var keyCode = e.which;
 
         if (keyCode === 13) { // Enter Key
-            searchAddressToCoordinate('way', $('#wayAddr').val());
+            searchAddressToCoordinate('way_1', $('#wayAddr1').val());
         }
     });
 
-    $('#waySubmit').on('click', function(e) {
+    $('#waySubmit1').on('click', function(e) {
         e.preventDefault();
 
-        searchAddressToCoordinate('way', $('#wayAddr').val());
+        searchAddressToCoordinate('way_1', $('#wayAddr1').val());
+    });
+    
+ 	// 경유지 2
+    $('#wayAddr2').on('keydown', function(e) {
+        var keyCode = e.which;
+
+        if (keyCode === 13) { // Enter Key
+            searchAddressToCoordinate('way_2', $('#wayAddr2').val());
+        }
+    });
+
+    $('#waySubmit2').on('click', function(e) {
+        e.preventDefault();
+
+        searchAddressToCoordinate('way_2', $('#wayAddr2').val());
+    });
+    
+ 	// 경유지 3
+    $('#wayAddr3').on('keydown', function(e) {
+        var keyCode = e.which;
+
+        if (keyCode === 13) { // Enter Key
+            searchAddressToCoordinate('way_3', $('#wayAddr3').val());
+        }
+    });
+
+    $('#waySubmit3').on('click', function(e) {
+        e.preventDefault();
+
+        searchAddressToCoordinate('way_3', $('#wayAddr3').val());
+    });
+    
+ 	// 경유지 4
+    $('#wayAddr4').on('keydown', function(e) {
+        var keyCode = e.which;
+
+        if (keyCode === 13) { // Enter Key
+            searchAddressToCoordinate('way_4', $('#wayAddr4').val());
+        }
+    });
+
+    $('#waySubmit4').on('click', function(e) {
+        e.preventDefault();
+
+        searchAddressToCoordinate('way_4', $('#wayAddr4').val());
+    });
+    
+ 	// 경유지 5
+    $('#wayAddr5').on('keydown', function(e) {
+        var keyCode = e.which;
+
+        if (keyCode === 13) { // Enter Key
+            searchAddressToCoordinate('way_5', $('#wayAddr5').val());
+        }
+    });
+
+    $('#waySubmit5').on('click', function(e) {
+        e.preventDefault();
+
+        searchAddressToCoordinate('way_5', $('#wayAddr5').val());
     });
 
     searchAddressToCoordinate('start', '정자동 178-1');
