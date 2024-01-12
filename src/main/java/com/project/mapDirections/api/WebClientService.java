@@ -1,4 +1,4 @@
-package com.project.searchBlog.api;
+package com.project.mapDirections.api;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;

@@ -1,4 +1,4 @@
-package com.project.searchBlog.domain;
+package com.project.mapDirections.domain;
 
 import lombok.Data;
 

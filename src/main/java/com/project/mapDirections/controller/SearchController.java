@@ -1,4 +1,4 @@
-package com.project.searchBlog.controller;
+package com.project.mapDirections.controller;
 
 import java.io.IOException;
 import java.util.HashMap;

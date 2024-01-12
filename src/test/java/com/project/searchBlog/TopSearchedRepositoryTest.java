@@ -16,8 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.project.searchBlog.domain.TopSearched;
-import com.project.searchBlog.repository.TopSearchedRepository;
+import com.project.mapDirections.domain.TopSearched;
+import com.project.mapDirections.repository.TopSearchedRepository;
 
 
 @SpringBootTest

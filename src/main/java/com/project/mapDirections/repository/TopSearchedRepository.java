@@ -1,4 +1,4 @@
-package com.project.searchBlog.repository;
+package com.project.mapDirections.repository;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.searchBlog.domain.TopSearched;
+import com.project.mapDirections.domain.TopSearched;
 
 @Repository
 public interface TopSearchedRepository extends JpaRepository<TopSearched, Long>{

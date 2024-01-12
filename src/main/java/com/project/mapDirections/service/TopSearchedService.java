@@ -1,4 +1,4 @@
-package com.project.searchBlog.service;
+package com.project.mapDirections.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,10 +10,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.searchBlog.domain.Documents;
-import com.project.searchBlog.domain.NaverItem;
-import com.project.searchBlog.domain.TopSearched;
-import com.project.searchBlog.repository.TopSearchedRepository;
+import com.project.mapDirections.domain.Documents;
+import com.project.mapDirections.domain.NaverItem;
+import com.project.mapDirections.domain.TopSearched;
+import com.project.mapDirections.repository.TopSearchedRepository;
 
 @Service
 public class TopSearchedService {

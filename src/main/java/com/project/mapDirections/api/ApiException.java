@@ -1,4 +1,4 @@
-package com.project.searchBlog.api;
+package com.project.mapDirections.api;
 
 public class ApiException extends RuntimeException {
 
