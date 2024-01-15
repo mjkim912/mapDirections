@@ -39,9 +39,10 @@ public class SearchController {
       	//String start = "126.844856,37.5407361";
      	//String goal = "126.8980711,37.5763214";
         
-        String option = "trafast";
-        
-        System.out.println("param : " + param);
+		System.out.println("param : " + param);
+		
+		String avoidtoll = param.get("avoidtoll").toString();
+        String option = avoidtoll.equals("false") ? "trafast" : "traavoidtoll";
         
         String start = param.get("start").toString();
         String goal = param.get("goal").toString();
